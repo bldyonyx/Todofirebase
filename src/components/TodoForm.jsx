@@ -13,6 +13,7 @@ export default function TodoForm() {
 
     listUpdated.push({
       title: todoTitle,
+      createdAt: new Date().toISOString(),
     });
 
     addToFirebase(listUpdated);

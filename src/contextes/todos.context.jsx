@@ -5,6 +5,7 @@ import { database } from "../services/firebase/firebase";
 export const TodosCtx = createContext({
   todosList: [],
   addToFirebase: () => {},
+  deleteFromFirebase: () => {},
 });
 
 export function TodosProvider({ children }) {
@@ -16,6 +17,14 @@ export function TodosProvider({ children }) {
     set(todosRef, listUpdated);
   };
 
+  const deleteFromFirebase = (todoIndex) => {
+    const listUpdated = todosList.filter(
+      (_, index) => index !== todoIndex
+    );
+
+    addToFirebase(listUpdated);
+  };
+
   useEffect(() => {
     const todosRef = ref(database, "todos");
 
@@ -23,22 +32,27 @@ export function TodosProvider({ children }) {
       const data = snapshot.val();
 
       if (!data) {
+        console.log([]);
         setTodosList([]);
         return;
       }
 
-      if (Array.isArray(data)) {
-        setTodosList(data);
-      } else {
-        setTodosList(Object.values(data));
-      }
+      const todos = Array.isArray(data)
+        ? data
+        : Object.values(data);
+
+      console.log(todos);
+
+      setTodosList(todos);
     });
 
     return () => unsubscribe();
   }, []);
 
   return (
-    <TodosCtx.Provider value={{ todosList, addToFirebase }}>
+    <TodosCtx.Provider
+      value={{ todosList, addToFirebase, deleteFromFirebase }}
+    >
       {children}
     </TodosCtx.Provider>
   );
