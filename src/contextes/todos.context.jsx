@@ -51,7 +51,11 @@ export function TodosProvider({ children }) {
 
   return (
     <TodosCtx.Provider
-      value={{ todosList, addToFirebase, deleteFromFirebase }}
+      value={{
+        todosList,
+        addToFirebase,
+        deleteFromFirebase,
+      }}
     >
       {children}
     </TodosCtx.Provider>
