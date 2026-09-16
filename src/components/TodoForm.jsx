@@ -39,7 +39,7 @@ export default function TodoForm() {
       />
 
       <button
-        className="rounded-lg bg-stone-900 px-4 py-2 text-sm font-medium text-white hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-300"
+        className="rounded-lg bg-stone-900 px-4 py-2 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-300"
         onClick={() => handleAddTodo()}
       >
         add

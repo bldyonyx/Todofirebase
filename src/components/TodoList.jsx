@@ -14,7 +14,7 @@ export default function TodoList() {
           <span>{todo.title}</span>
 
           <button
-            className="rounded-md border border-stone-300 bg-white px-3 py-1 text-sm font-medium text-stone-700 hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-stone-300"
+            className="rounded-md border border-stone-300 bg-white px-3 py-1 text-sm font-medium text-stone-700 transition hover:-translate-y-0.5 hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-stone-300"
             onClick={() => deleteFromFirebase(index)}
           >
             Delete
