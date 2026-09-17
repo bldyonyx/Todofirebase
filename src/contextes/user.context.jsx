@@ -12,6 +12,10 @@ export function UserProvider({ children }) {
   const signIn = async () => {
     const user = await signInWithGoogle();
 
+    if (!user.uid) {
+      throw new Error("Authenticated Firebase user is missing a uid.");
+    }
+
     setCurrentUser(user);
   };
 

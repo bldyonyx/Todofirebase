@@ -6,7 +6,7 @@ export default function TodoForm() {
 
   const { todosList, addToFirebase } = useContext(TodosCtx);
 
-  const handleAddTodo = () => {
+  const handleAddTodo = async () => {
     if (!todoTitle.trim()) return;
 
     const listUpdated = [...todosList];
@@ -16,9 +16,12 @@ export default function TodoForm() {
       createdAt: new Date().toISOString(),
     });
 
-    addToFirebase(listUpdated);
-
-    setTodoTitle("");
+    try {
+      await addToFirebase(listUpdated);
+      setTodoTitle("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

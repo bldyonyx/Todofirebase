@@ -1,6 +1,13 @@
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
 import { onValue, ref, set } from "firebase/database";
 import { database } from "../services/firebase/firebase";
+import { UserCtx } from "./user.context";
 
 export const TodosCtx = createContext({
   todosList: [],
@@ -11,10 +18,17 @@ export const TodosCtx = createContext({
 export function TodosProvider({ children }) {
   const [todosList, setTodosList] = useState([]);
 
-  const addToFirebase = (listUpdated) => {
-    const todosRef = ref(database, "todos");
+  const { currentUser } = useContext(UserCtx);
 
-    set(todosRef, listUpdated);
+  const userId = currentUser?.uid || "guest";
+
+  const addToFirebase = (listUpdated) => {
+    const todosRef = ref(
+      database,
+      `users/${userId}/todos`
+    );
+
+    return set(todosRef, listUpdated);
   };
 
   const deleteFromFirebase = (todoIndex) => {
@@ -22,17 +36,19 @@ export function TodosProvider({ children }) {
       (_, index) => index !== todoIndex
     );
 
-    addToFirebase(listUpdated);
+    return addToFirebase(listUpdated);
   };
 
   useEffect(() => {
-    const todosRef = ref(database, "todos");
+    const todosRef = ref(
+      database,
+      `users/${userId}/todos`
+    );
 
     const unsubscribe = onValue(todosRef, (snapshot) => {
       const data = snapshot.val();
 
       if (!data) {
-        console.log([]);
         setTodosList([]);
         return;
       }
@@ -41,13 +57,11 @@ export function TodosProvider({ children }) {
         ? data
         : Object.values(data);
 
-      console.log(todos);
-
       setTodosList(todos);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [userId]);
 
   return (
     <TodosCtx.Provider
